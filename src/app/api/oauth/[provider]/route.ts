@@ -5,7 +5,7 @@ import {
   OAuthProvider,
   oAuthProviders,
   UserOAuthAccountTable,
-  UserTable,
+  users,
 } from "@/drizzle/schema"
 import { eq } from "drizzle-orm"
 import { cookies } from "next/headers"
@@ -52,19 +52,19 @@ function connectUserToAccount(
   provider: OAuthProvider
 ) {
   return db.transaction(async trx => {
-    let user = await trx.query.UserTable.findFirst({
-      where: eq(UserTable.email, email),
+    let user = await trx.query.users.findFirst({
+      where: eq(users.email, email),
       columns: { id: true, role: true },
     })
 
     if (user == null) {
       const [newUser] = await trx
-        .insert(UserTable)
+        .insert(users)
         .values({
           email: email,
           name: name,
         })
-        .returning({ id: UserTable.id, role: UserTable.role })
+        .returning({ id: users.id, role: users.role })
       user = newUser
     }
 

@@ -1,4 +1,4 @@
-import { env } from "@/data/env/server"
+import { env } from "@/env/server"
 import { Redis } from "@upstash/redis"
 
 export const redisClient = new Redis({

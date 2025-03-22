@@ -1,4 +1,5 @@
 import * as dz from "drizzle-orm/pg-core";
+import { images } from "./images";
 
 export const userRoles = ["admin", "user"] as const
 export type UserRole = (typeof userRoles)[number]
@@ -11,6 +12,7 @@ export const users = dz.pgTable("users", {
   password: dz.text(),
   salt: dz.text(),
   role: userRoleEnum().notNull().default("user"),
+  avatarId: dz.uuid().references(() => images.id, {onDelete: 'set null'}),
   createdAt: dz.timestamp({ withTimezone: true }).notNull().defaultNow(),
   updatedAt: dz.timestamp({ withTimezone: true })
     .notNull()

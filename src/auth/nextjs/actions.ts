@@ -3,8 +3,8 @@
 import { z } from "zod"
 import { redirect } from "next/navigation"
 import { signInSchema, signUpSchema } from "./schemas"
-import { db } from "@/drizzle/db"
-import { users } from "@/drizzle/schema"
+import { db1 } from "@/drizzle/db1"
+import { users } from "@/drizzle/db1/schema"
 import { eq } from "drizzle-orm"
 import {
   comparePasswords,
@@ -19,7 +19,7 @@ export async function signIn(unsafeData: z.infer<typeof signInSchema>) {
 
   if (!success) return "Unable to log you in"
 
-  const user = await db.query.users.findFirst({
+  const user = await db1.query.users.findFirst({
     columns: { password: true, salt: true, id: true, email: true, role: true },
     where: eq(users.email, data.email),
   })
@@ -46,7 +46,7 @@ export async function signUp(unsafeData: z.infer<typeof signUpSchema>) {
 
   if (!success) return "Unable to create account"
 
-  const existingUser = await db.query.users.findFirst({
+  const existingUser = await db1.query.users.findFirst({
     where: eq(users.email, data.email),
   })
 
@@ -56,7 +56,7 @@ export async function signUp(unsafeData: z.infer<typeof signUpSchema>) {
     const salt = generateSalt()
     const hashedPassword = await hashPassword(data.password, salt)
 
-    const [user] = await db
+    const [user] = await db1
       .insert(users)
       .values({
         name: data.name,

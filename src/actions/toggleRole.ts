@@ -2,15 +2,15 @@
 
 import { updateUserSessionData } from "@/auth/core/session"
 import { getCurrentUser } from "@/auth/nextjs/currentUser"
-import { db } from "@/drizzle/db"
-import { users } from "@/drizzle/schema"
+import { db1 } from "@/drizzle/db1"
+import { users } from "@/drizzle/db1/schema"
 import { eq } from "drizzle-orm"
 import { cookies } from "next/headers"
 
 export async function toggleRole() {
   const user = await getCurrentUser({ redirectIfNotFound: true })
 
-  const [updatedUser] = await db
+  const [updatedUser] = await db1
     .update(users)
     .set({ role: user.role === "admin" ? "user" : "admin" })
     .where(eq(users.id, user.id))

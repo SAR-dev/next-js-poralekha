@@ -2,9 +2,9 @@ import { cookies } from "next/headers"
 import { getUserFromSession } from "../core/session"
 import { cache } from "react"
 import { redirect } from "next/navigation"
-import { db } from "@/drizzle/db"
+import { db1 } from "@/drizzle/db1"
 import { eq } from "drizzle-orm"
-import { users } from "@/drizzle/schema"
+import { users } from "@/drizzle/db1/schema"
 
 type FullUser = Exclude<
   Awaited<ReturnType<typeof getUserFromDb>>,
@@ -44,7 +44,7 @@ async function _getCurrentUser({
   }
 
   if (withFullUser) {
-    const fullUser = await getUserFromDb(user.id)
+    const fullUser = await getUserFromDb(user.id as string)
     // This should never happen
     if (fullUser == null) throw new Error("User not found in database")
     return fullUser
@@ -56,7 +56,7 @@ async function _getCurrentUser({
 export const getCurrentUser = cache(_getCurrentUser)
 
 function getUserFromDb(id: string) {
-  return db.query.users.findFirst({
+  return db1.query.users.findFirst({
     columns: { id: true, email: true, role: true, name: true },
     where: eq(users.id, id),
   })

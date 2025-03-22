@@ -3,7 +3,7 @@ import { z } from "zod"
 
 export const env = createEnv({
   server: {
-    POSTGRES_URL: z.string().min(1),
+    DB1_URL: z.string().min(1),
     REDIS_URL: z.string().min(1),
     REDIS_TOKEN: z.string().min(1)
   },

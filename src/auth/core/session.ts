@@ -1,4 +1,4 @@
-import { userRoles } from "@/drizzle/schema"
+import { userRoles } from "@/drizzle/db1/schema/users"
 import { z } from "zod"
 import crypto from "crypto"
 import { redisClient } from "@/redis/redis"
